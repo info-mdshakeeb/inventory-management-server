@@ -1,4 +1,5 @@
 const ApiErrors = require('../errors/ApiErrors');
+const ValidationError = require('../errors/ValidationError');
 
 // eslint-disable-next-line no-unused-vars
 const globalErrorHandler = (error, req, res, next) => {
@@ -17,6 +18,11 @@ const globalErrorHandler = (error, req, res, next) => {
             },
           ]
         : []);
+  } else if (error.name === 'ValidationError') {
+    const simplifyError = ValidationError(error);
+    statusCode = simplifyError.statusCode;
+    message = simplifyError.message;
+    errorMessages = simplifyError.errorMessages;
   } else if (error instanceof Error) {
     status,
       message,
